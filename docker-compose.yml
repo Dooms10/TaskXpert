@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    env_file:
+      - ./server/env.example
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/taskxpert
+      CLIENT_URL: http://localhost:4173
+      NODE_ENV: production
+    ports:
+      - "8800:8800"
+    depends_on:
+      - mongo
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    environment:
+      VITE_API_URL: http://localhost:8800/api
+    ports:
+      - "4173:80"
+    depends_on:
+      - server
+
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
+

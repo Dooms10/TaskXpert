@@ -1,0 +1,36 @@
+services:
+  # Backend Service
+  - type: web
+    name: taskxpert-backend
+    env: node
+    repo: https://github.com/Dooms10/TaskXpert.git
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8800
+      - key: JWT_SECRET
+        value: 617107ec75fd0b5b6c170623abe15d8da5f67a76377b69eb6343343c0fe5148357edae07b4455044f207bcc8fddeb303ddff8f24981a36cd4d0afcb243587494
+      - key: MONGODB_URI
+        value: mongodb+srv://taskxpert:taskxpert123@cluster.mongodb.net/taskxpert?retryWrites=true&w=majority
+      - key: CLIENT_URL
+        value: https://taskxpert-frontend.onrender.com
+
+  # Frontend Service
+  - type: web
+    name: taskxpert-frontend
+    env: static
+    repo: https://github.com/Dooms10/TaskXpert.git
+    rootDir: client
+    buildCommand: npm run build
+    publishPath: dist
+    plan: free
+    envVars:
+      - key: VITE_API_URL
+        value: https://taskxpert-backend.onrender.com/api
+      - key: NODE_ENV
+        value: production
